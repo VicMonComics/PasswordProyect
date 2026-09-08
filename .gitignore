@@ -1,0 +1,2 @@
+# Database import files can contain user data, password hashes/plaintext legacy data, and push tokens.
+cloudflare/*-d1-import.sql
