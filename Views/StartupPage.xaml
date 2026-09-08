@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PasswordSave.Views.StartupPage"
+             NavigationPage.HasNavigationBar="False">
+    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="12">
+        <ActivityIndicator IsRunning="True" />
+        <Label Text="PasswordSave" Style="{StaticResource SubtitleLabel}" />
+    </VerticalStackLayout>
+</ContentPage>

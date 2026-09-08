@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PasswordSave.ViewModels"
+             x:Class="PasswordSave.Views.OnboardingPage"
+             x:DataType="viewmodels:OnboardingViewModel"
+             NavigationPage.HasNavigationBar="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="28" Spacing="20">
+
+            <VerticalStackLayout Spacing="4" Margin="0,48,0,12">
+                <Label Text="Crea tu bóveda" Style="{StaticResource TitleLabel}" HorizontalOptions="Center" />
+                <Label Text="Esta contraseña maestra no se guarda en ningún lado: sin ella, nadie puede recuperar tus datos — ni siquiera nosotros."
+                       Style="{StaticResource SubtitleLabel}"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+
+            <Border>
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Contraseña maestra (mínimo 8 caracteres)" Style="{StaticResource SubtitleLabel}" />
+                    <Entry Text="{Binding MasterPassword}" IsPassword="True" Placeholder="Contraseña maestra" />
+                    <Entry Text="{Binding ConfirmMasterPassword}" IsPassword="True" Placeholder="Confirmar contraseña maestra" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border>
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="PIN de acceso rápido (4 a 6 dígitos)" Style="{StaticResource SubtitleLabel}" />
+                    <Entry Text="{Binding Pin}" IsPassword="True" Keyboard="Numeric" MaxLength="6" Placeholder="PIN" />
+                    <Entry Text="{Binding ConfirmPin}" IsPassword="True" Keyboard="Numeric" MaxLength="6" Placeholder="Confirmar PIN" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="{Binding ErrorMessage}"
+                   Style="{StaticResource ErrorLabel}"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotEmptyConverter}}" />
+
+            <Button Text="Crear bóveda" Command="{Binding CreateVaultCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

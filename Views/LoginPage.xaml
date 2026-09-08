@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PasswordSave.ViewModels"
+             x:Class="PasswordSave.Views.LoginPage"
+             x:DataType="viewmodels:LoginViewModel"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid Padding="28" RowDefinitions="Auto,*,Auto">
+
+        <VerticalStackLayout Grid.Row="0" Spacing="4" Margin="0,48,0,0">
+            <Label Text="PasswordSave" Style="{StaticResource TitleLabel}" HorizontalOptions="Center" />
+            <Label Text="Desbloquea tu bóveda" Style="{StaticResource SubtitleLabel}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="1" VerticalOptions="Center" Spacing="20">
+
+            <!-- Modo PIN -->
+            <VerticalStackLayout Spacing="16" IsVisible="{Binding IsMasterPasswordMode, Converter={StaticResource InverseBoolConverter}}">
+                <Border>
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="PIN" Style="{StaticResource SubtitleLabel}" />
+                        <Entry Text="{Binding Pin}"
+                               Placeholder="••••"
+                               Keyboard="Numeric"
+                               MaxLength="6"
+                               IsPassword="True" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Button Text="Ingresar" Command="{Binding SubmitPinCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
+
+                <Button Text="Usar biometría"
+                        Style="{StaticResource SecondaryButton}"
+                        Command="{Binding UseBiometricCommand}"
+                        IsVisible="{Binding IsBiometricAvailable}" />
+
+                <Button Text="Usar contraseña maestra"
+                        Style="{StaticResource TextButton}"
+                        Command="{Binding SwitchToMasterPasswordCommand}" />
+            </VerticalStackLayout>
+
+            <!-- Modo contraseña maestra -->
+            <VerticalStackLayout Spacing="16" IsVisible="{Binding IsMasterPasswordMode}">
+                <Border>
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Contraseña maestra" Style="{StaticResource SubtitleLabel}" />
+                        <Entry Text="{Binding MasterPassword}"
+                               Placeholder="Contraseña maestra"
+                               IsPassword="True" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Button Text="Desbloquear" Command="{Binding SubmitMasterPasswordCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
+            </VerticalStackLayout>
+
+            <Label Text="{Binding ErrorMessage}"
+                   Style="{StaticResource ErrorLabel}"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotEmptyConverter}}" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <Label Grid.Row="2"
+               Text="Sin conexión: tus contraseñas nunca salen de este dispositivo."
+               Style="{StaticResource SubtitleLabel}"
+               HorizontalTextAlignment="Center"
+               Margin="0,0,0,16" />
+
+    </Grid>
+</ContentPage>
