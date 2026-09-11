@@ -1,37 +1,55 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <!--
-        Paleta base de PasswordSave: fondo oscuro + acento verde.
-        La app usa siempre este tema (no sigue el claro/oscuro del sistema)
-        porque es la identidad visual elegida para el producto, no un
-        "modo oscuro" opcional.
+        Paleta tomada tal cual de llavero-prototipo.html (:root del CSS).
         Todo control debe tomar su color de aquí — nunca un color fijo
         (#RRGGBB) suelto dentro de una vista.
     -->
 
-    <Color x:Key="Background">#0E1512</Color>
-    <Color x:Key="Surface">#1A2420</Color>
-    <Color x:Key="SurfaceAlt">#22302A</Color>
-    <Color x:Key="Border">#2C3A33</Color>
+    <!-- Fondos -->
+    <Color x:Key="BgPage">#0A1615</Color>
+    <Color x:Key="BgBase">#0E1A1A</Color>
+    <Color x:Key="BgElevated">#152826</Color>
+    <Color x:Key="BgCard">#1B302D</Color>
+    <Color x:Key="BgCardHover">#213B37</Color>
 
-    <Color x:Key="Primary">#34C77B</Color>
-    <Color x:Key="PrimaryDark">#1F8F57</Color>
-    <Color x:Key="OnPrimary">#06120C</Color>
+    <!-- Bordes -->
+    <Color x:Key="Border">#264541</Color>
+    <Color x:Key="BorderSoft">#1D3532</Color>
 
-    <Color x:Key="TextPrimary">#ECEDEA</Color>
-    <Color x:Key="TextSecondary">#9AA6A0</Color>
-    <Color x:Key="TextDisabled">#5B665F</Color>
+    <!-- Texto -->
+    <Color x:Key="TextPrimary">#EDF6F3</Color>
+    <Color x:Key="TextSecondary">#9DBAB3</Color>
+    <Color x:Key="TextTertiary">#6B8B84</Color>
 
-    <Color x:Key="Danger">#E2574C</Color>
-    <Color x:Key="OnDanger">#FDEDEB</Color>
-    <Color x:Key="Success">#34C77B</Color>
+    <!-- Acento principal: jade -->
+    <Color x:Key="Jade">#22C58B</Color>
+    <Color x:Key="JadeDim">#123C2D</Color>
+    <Color x:Key="JadeSoft">#1A4536</Color>
+    <Color x:Key="OnJade">#062018</Color>
 
-    <!-- Brushes: para bindings que exigen Brush en vez de Color (algunos controles gráficos). -->
-    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource Background}" />
-    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource Surface}" />
-    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}" />
+    <!-- Acento premium: dorado -->
+    <Color x:Key="Gold">#E4B45A</Color>
+    <Color x:Key="GoldGradientStart">#F0C878</Color>
+    <Color x:Key="GoldGradientEnd">#B9822C</Color>
+    <Color x:Key="GoldDim">#3A2E17</Color>
+    <Color x:Key="GoldSoft">#4A3B1E</Color>
+    <Color x:Key="OnGold">#241804</Color>
+
+    <!-- Estados -->
+    <Color x:Key="Danger">#FF6B6B</Color>
+    <Color x:Key="DangerDim">#3A1B1B</Color>
+
+    <!-- Brushes: para bindings que exigen Brush en vez de Color, y gradientes. -->
+    <SolidColorBrush x:Key="BgPageBrush" Color="{StaticResource BgPage}" />
+    <SolidColorBrush x:Key="BgElevatedBrush" Color="{StaticResource BgElevated}" />
+    <SolidColorBrush x:Key="JadeBrush" Color="{StaticResource Jade}" />
     <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource Border}" />
+    <LinearGradientBrush x:Key="GoldGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="{StaticResource GoldGradientStart}" Offset="0.0" />
+        <GradientStop Color="{StaticResource GoldGradientEnd}" Offset="1.0" />
+    </LinearGradientBrush>
 
 </ResourceDictionary>

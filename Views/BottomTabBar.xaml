@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PasswordSave.Common.BottomTabBar">
+
+    <!--
+        Simplificación consciente: el prototipo usa un ícono SVG por pestaña;
+        aquí uso solo texto (color activo = Jade, inactivo = TextTertiary)
+        para no depender de una fuente de íconos que todavía no elegimos.
+        Cuando se elija una, se agregan los glyphs sin tocar la navegación.
+    -->
+    <Grid RowDefinitions="Auto" ColumnDefinitions="*,*,*,*"
+          BackgroundColor="{StaticResource BgBase}"
+          Padding="6,10,6,16">
+
+        <BoxView Grid.ColumnSpan="4" HeightRequest="1" Color="{StaticResource BorderSoft}" VerticalOptions="Start" Margin="0,-10,0,0" />
+
+        <Button x:Name="InicioButton" Grid.Column="0" Text="Inicio"
+                BackgroundColor="Transparent" FontFamily="InterMedium" FontSize="10.5" Padding="0"
+                Clicked="OnTabClicked" />
+        <Button x:Name="GeneradorButton" Grid.Column="1" Text="Generador"
+                BackgroundColor="Transparent" FontFamily="InterMedium" FontSize="10.5" Padding="0"
+                Clicked="OnTabClicked" />
+        <Button x:Name="CategoriasButton" Grid.Column="2" Text="Categorías"
+                BackgroundColor="Transparent" FontFamily="InterMedium" FontSize="10.5" Padding="0"
+                Clicked="OnTabClicked" />
+        <Button x:Name="AjustesButton" Grid.Column="3" Text="Ajustes"
+                BackgroundColor="Transparent" FontFamily="InterMedium" FontSize="10.5" Padding="0"
+                Clicked="OnTabClicked" />
+    </Grid>
+</ContentView>

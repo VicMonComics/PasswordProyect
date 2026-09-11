@@ -1,62 +1,77 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <!--
-        Estilos implícitos: al no llevar x:Key, se aplican automáticamente a
-        todo control de ese TargetType en toda la app. Así ninguna vista
-        vuelve a definir BackgroundColor/TextColor/fuente a mano — solo usa
-        los x:Key (TitleLabel, SecondaryButton, etc.) para variantes.
+        Estilos implícitos (sin x:Key): se aplican automáticamente a todo
+        control de ese TargetType en toda la app.
 
-        Nota de corrección: en .NET MAUI un Style con x:Key NO puede usar
-        BasedOn="{StaticResource {x:Type Label}}" para heredar de un estilo
-        implícito (ese patrón es de WPF, no de MAUI — produce
-        MAUIX2002/MAUIG1001). Por eso cada estilo con x:Key repite sus
-        propiedades completas en vez de heredar del implícito.
+        Fuentes: el prototipo usa Space Grotesk (display/títulos) e Inter
+        (cuerpo). Hay que descargar los .ttf de Google Fonts y agregarlos a
+        Resources/Fonts/, y registrarlos en MauiProgram.cs con estos mismos
+        alias (ver ConfigureFonts):
+          SpaceGroteskMedium / SpaceGroteskSemibold / SpaceGroteskBold
+          InterRegular / InterMedium / InterSemibold / InterBold
+        Mientras no estén agregados, MAUI usa la fuente del sistema como
+        fallback (no truena, solo se ve distinto).
     -->
 
     <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
-        <Setter Property="BackgroundColor" Value="{StaticResource Background}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BgPage}" />
     </Style>
 
     <Style TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
-        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="13.5" />
     </Style>
 
     <Style x:Key="TitleLabel" TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
-        <Setter Property="FontFamily" Value="OpenSansSemibold" />
-        <Setter Property="FontSize" Value="26" />
+        <Setter Property="FontFamily" Value="SpaceGroteskSemibold" />
+        <Setter Property="FontSize" Value="21" />
     </Style>
 
     <Style x:Key="SubtitleLabel" TargetType="Label">
-        <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
-        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource TextTertiary}" />
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="13.5" />
     </Style>
 
     <Style x:Key="ErrorLabel" TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource Danger}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontFamily" Value="InterSemibold" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <!-- Nombre de sitio/app dentro de una fila o hero (p.ej. "Netflix") -->
+    <Style x:Key="RowNameLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        <Setter Property="FontFamily" Value="InterSemibold" />
+        <Setter Property="FontSize" Value="13.5" />
+    </Style>
+
+    <Style x:Key="RowSubLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextTertiary}" />
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="11.5" />
     </Style>
 
     <Style TargetType="Entry">
         <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
-        <Setter Property="PlaceholderColor" Value="{StaticResource TextSecondary}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceAlt}" />
-        <Setter Property="FontSize" Value="16" />
+        <Setter Property="PlaceholderColor" Value="{StaticResource TextTertiary}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BgElevated}" />
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="15" />
     </Style>
 
     <Style TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-        <Setter Property="TextColor" Value="{StaticResource OnPrimary}" />
-        <Setter Property="FontFamily" Value="OpenSansSemibold" />
-        <Setter Property="FontSize" Value="16" />
-        <Setter Property="CornerRadius" Value="10" />
-        <Setter Property="HeightRequest" Value="50" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Jade}" />
+        <Setter Property="TextColor" Value="{StaticResource OnJade}" />
+        <Setter Property="FontFamily" Value="InterSemibold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="HeightRequest" Value="48" />
         <Setter Property="Padding" Value="16,0" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -64,8 +79,8 @@
                     <VisualState x:Name="Normal" />
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{StaticResource SurfaceAlt}" />
-                            <Setter Property="TextColor" Value="{StaticResource TextDisabled}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource BgElevated}" />
+                            <Setter Property="TextColor" Value="{StaticResource TextTertiary}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -73,41 +88,112 @@
         </Setter>
     </Style>
 
+    <!-- Botón dorado (premium): fondo plano aquí; el gradiente real (btn-gold
+         del prototipo) se aplica con GoldGradientBrush en el control que lo use. -->
+    <Style x:Key="GoldButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Gold}" />
+        <Setter Property="TextColor" Value="{StaticResource OnGold}" />
+        <Setter Property="FontFamily" Value="InterSemibold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="Padding" Value="16,0" />
+    </Style>
+
     <Style x:Key="SecondaryButton" TargetType="Button">
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="TextColor" Value="{StaticResource Primary}" />
-        <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+        <Setter Property="TextColor" Value="{StaticResource Jade}" />
+        <Setter Property="BorderColor" Value="{StaticResource Jade}" />
         <Setter Property="BorderWidth" Value="1" />
-        <Setter Property="FontFamily" Value="OpenSansSemibold" />
-        <Setter Property="FontSize" Value="16" />
-        <Setter Property="CornerRadius" Value="10" />
-        <Setter Property="HeightRequest" Value="50" />
+        <Setter Property="FontFamily" Value="InterSemibold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="HeightRequest" Value="48" />
         <Setter Property="Padding" Value="16,0" />
     </Style>
 
     <Style x:Key="TextButton" TargetType="Button">
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
-        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource TextTertiary}" />
+        <Setter Property="FontFamily" Value="InterRegular" />
+        <Setter Property="FontSize" Value="12.5" />
         <Setter Property="HeightRequest" Value="36" />
     </Style>
 
+    <!-- Botón flotante (FAB), esquina inferior derecha, sobre el tabbar -->
+    <Style x:Key="FabButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Jade}" />
+        <Setter Property="TextColor" Value="{StaticResource OnJade}" />
+        <Setter Property="FontFamily" Value="InterSemibold" />
+        <Setter Property="FontSize" Value="26" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="WidthRequest" Value="52" />
+        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <!-- Chip de filtro (fila de categorías rápidas en Inicio) -->
+    <Style x:Key="ChipButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
+        <Setter Property="BorderColor" Value="{StaticResource Border}" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="FontFamily" Value="InterMedium" />
+        <Setter Property="FontSize" Value="11.5" />
+        <Setter Property="CornerRadius" Value="999" />
+        <Setter Property="HeightRequest" Value="32" />
+        <Setter Property="Padding" Value="14,0" />
+    </Style>
+
+    <Style x:Key="ChipButtonActive" TargetType="Button" BasedOn="{StaticResource ChipButton}">
+        <Setter Property="BackgroundColor" Value="{StaticResource JadeSoft}" />
+        <Setter Property="BorderColor" Value="{StaticResource Jade}" />
+        <Setter Property="TextColor" Value="{StaticResource Jade}" />
+        <Setter Property="FontFamily" Value="InterSemibold" />
+    </Style>
+
     <Style TargetType="Border">
-        <Setter Property="BackgroundColor" Value="{StaticResource Surface}" />
-        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BgCard}" />
+        <Setter Property="Stroke" Value="{StaticResource BorderSoft}" />
         <Setter Property="StrokeThickness" Value="1" />
-        <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 16" />
         <Setter Property="Padding" Value="16" />
     </Style>
 
+    <!-- Barra de búsqueda tipo "search" del prototipo -->
+    <Style x:Key="SearchBarBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource BgElevated}" />
+        <Setter Property="Stroke" Value="{StaticResource BorderSoft}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+        <Setter Property="Padding" Value="12,10" />
+    </Style>
+
+    <!-- Fila de credencial en la lista -->
+    <Style x:Key="CredentialRowBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="Stroke" Value="Transparent" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+        <Setter Property="Padding" Value="8,10" />
+    </Style>
+
+    <!-- Círculo de avatar con inicial (color de fondo se asigna por credencial) -->
+    <Style x:Key="AvatarLabel" TargetType="Label">
+        <Setter Property="FontFamily" Value="SpaceGroteskSemibold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource OnJade}" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+
     <Style TargetType="ActivityIndicator">
-        <Setter Property="Color" Value="{StaticResource Primary}" />
+        <Setter Property="Color" Value="{StaticResource Jade}" />
     </Style>
 
     <Style TargetType="Switch">
-        <Setter Property="OnColor" Value="{StaticResource PrimaryDark}" />
-        <Setter Property="ThumbColor" Value="{StaticResource Primary}" />
+        <Setter Property="OnColor" Value="{StaticResource JadeDim}" />
+        <Setter Property="ThumbColor" Value="{StaticResource Jade}" />
     </Style>
 
 </ResourceDictionary>

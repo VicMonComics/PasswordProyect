@@ -17,8 +17,17 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .ConfigureFonts(fonts =>
             {
-                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                // Agrega los .ttf reales a Resources/Fonts/ (descárgalos de
+                // Google Fonts: Space Grotesk y Inter) — mientras no estén,
+                // estos alias caen al font del sistema como fallback, sin
+                // romper el build.
+                fonts.AddFont("SpaceGrotesk-Medium.ttf", "SpaceGroteskMedium");
+                fonts.AddFont("SpaceGrotesk-SemiBold.ttf", "SpaceGroteskSemibold");
+                fonts.AddFont("SpaceGrotesk-Bold.ttf", "SpaceGroteskBold");
+                fonts.AddFont("Inter-Regular.ttf", "InterRegular");
+                fonts.AddFont("Inter-Medium.ttf", "InterMedium");
+                fonts.AddFont("Inter-SemiBold.ttf", "InterSemibold");
+                fonts.AddFont("Inter-Bold.ttf", "InterBold");
             });
 
         RegisterSecurityServices(builder.Services);
@@ -59,6 +68,17 @@ public static class MauiProgram
         // (proveedor ADO.NET oficial de Microsoft — no cifra nada por sí
         // mismo, solo guarda los bytes que ya llegan cifrados).
         services.AddSingleton<IVaultMetadataStore, VaultMetadataStore>();
+
+        // IPremiumStatusService: stub hasta conectar la tienda real (ver
+        // nota en StubPremiumStatusService).
+        services.AddSingleton<IPremiumStatusService, StubPremiumStatusService>();
+
+        services.AddSingleton<IPasswordGeneratorService, PasswordGeneratorService>();
+
+        // ICredentialRepository: cifra username/password/website/notes por
+        // campo con la vault key de la sesión (IVaultSessionService); lanza
+        // si el vault está bloqueado.
+        services.AddSingleton<ICredentialRepository, CredentialRepository>();
     }
 
     private static void RegisterViewsAndViewModels(IServiceCollection services)
@@ -68,7 +88,15 @@ public static class MauiProgram
         services.AddTransient<OnboardingPage>();
         services.AddTransient<LoginViewModel>();
         services.AddTransient<LoginPage>();
-        services.AddTransient<VaultPage>();
+        services.AddTransient<HomeViewModel>();
+        services.AddTransient<HomePage>();
+        services.AddTransient<GeneratorViewModel>();
+        services.AddTransient<GeneratorPage>();
+        services.AddTransient<CategoriesPage>();
+        services.AddTransient<SettingsPage>();
+        services.AddTransient<PaywallPage>();
+        services.AddTransient<AddEditCredentialViewModel>();
+        services.AddTransient<AddEditCredentialPage>();
     }
 
     /// <summary>

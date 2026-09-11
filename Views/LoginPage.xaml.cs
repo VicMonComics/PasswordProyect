@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using PasswordSave.ViewModels;
 
 namespace PasswordSave.Views;
@@ -5,11 +6,13 @@ namespace PasswordSave.Views;
 public partial class LoginPage : ContentPage
 {
     private readonly LoginViewModel _viewModel;
+    private readonly IServiceProvider _serviceProvider;
 
-    public LoginPage(LoginViewModel viewModel)
+    public LoginPage(LoginViewModel viewModel, IServiceProvider serviceProvider)
     {
         InitializeComponent();
         _viewModel = viewModel;
+        _serviceProvider = serviceProvider;
         BindingContext = _viewModel;
         _viewModel.LoginSucceeded += OnLoginSucceeded;
     }
@@ -22,9 +25,7 @@ public partial class LoginPage : ContentPage
 
     private async void OnLoginSucceeded(object? sender, EventArgs e)
     {
-        // VaultPage es un placeholder temporal: la pantalla real de la
-        // bóveda (lista de contraseñas) todavía no la hemos construido.
-        await Navigation.PushAsync(new VaultPage());
+        await Navigation.PushAsync(_serviceProvider.GetRequiredService<HomePage>());
         Navigation.RemovePage(this);
     }
 }

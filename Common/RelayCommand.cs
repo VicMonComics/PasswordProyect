@@ -1,4 +1,4 @@
-﻿using System.Windows.Input;
+using System.Windows.Input;
 
 namespace PasswordSave.Common;
 
@@ -23,11 +23,28 @@ public sealed class RelayCommand : ICommand
     public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 }
 
-/// <summary>
-/// Comando asíncrono manual. Se auto-deshabilita mientras se está
-/// ejecutando, para que no se pueda disparar dos veces el mismo intento de
-/// login con doble tap.
-/// </summary>
+/// <summary>Comando síncrono manual con parámetro tipado.</summary>
+public sealed class RelayCommand<T> : ICommand
+{
+    private readonly Action<T?> _execute;
+    private readonly Func<T?, bool>? _canExecute;
+
+    public RelayCommand(Action<T?> execute, Func<T?, bool>? canExecute = null)
+    {
+        _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+        _canExecute = canExecute;
+    }
+
+    public event EventHandler? CanExecuteChanged;
+
+    public bool CanExecute(object? parameter) => _canExecute?.Invoke((T?)parameter) ?? true;
+
+    public void Execute(object? parameter) => _execute((T?)parameter);
+
+    public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+}
+
+/// <summary>Comando asíncrono manual, sin depender de CommunityToolkit.Mvvm.</summary>
 public sealed class AsyncRelayCommand : ICommand
 {
     private readonly Func<Task> _execute;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:common="clr-namespace:PasswordSave.Common"
+             x:Class="PasswordSave.Views.SettingsPage"
+             NavigationPage.HasNavigationBar="False">
+    <Grid RowDefinitions="*,Auto">
+        <VerticalStackLayout Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center" Spacing="8">
+            <Label Text="Ajustes" Style="{StaticResource TitleLabel}" HorizontalOptions="Center" />
+            <Label Text="Próximo paso: timeout de inactividad, backup, cerrar sesión." Style="{StaticResource SubtitleLabel}" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+        <common:BottomTabBar Grid.Row="1" ActiveTab="Ajustes" TabSelected="OnTabSelected" />
+    </Grid>
+</ContentPage>
