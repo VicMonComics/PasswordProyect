@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PasswordSave.ViewModels"
+             x:Class="PasswordSave.Views.StorePage"
+             x:DataType="viewmodels:StoreViewModel"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{StaticResource GoldDim}">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <Button Grid.Row="0" Text="✕" WidthRequest="28" HeightRequest="28" Padding="0"
+                BackgroundColor="{StaticResource BgElevated}" TextColor="{StaticResource TextSecondary}"
+                CornerRadius="14" FontSize="13"
+                HorizontalOptions="End" Margin="0,14,16,0"
+                Clicked="OnCloseClicked" />
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="0,0,0,24" Spacing="18">
+
+                <!-- Encabezado -->
+                <VerticalStackLayout Spacing="6" Padding="26,0,26,0" HorizontalOptions="Center">
+                    <Border WidthRequest="58" HeightRequest="58" Padding="0" Stroke="Transparent" StrokeShape="RoundRectangle 18"
+                            HorizontalOptions="Center" Background="{StaticResource GoldGradientBrush}">
+                        <Label Text="🛡" FontSize="24" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="{StaticResource OnGold}" />
+                    </Border>
+                    <Label Text="PasswordSave Premium" Style="{StaticResource TitleLabel}" HorizontalTextAlignment="Center" />
+                    <Label Text="Seguridad sin límites para tu vida digital" Style="{StaticResource SubtitleLabel}" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <!-- Ya es premium: aviso, sin tarjetas de compra -->
+                <Border Margin="18,0" Padding="14" BackgroundColor="{StaticResource JadeSoft}" Stroke="{StaticResource Jade}"
+                        IsVisible="{Binding IsPremium}">
+                    <Label Text="Ya tienes PasswordSave Premium activo. ¡Gracias por tu apoyo!" TextColor="{StaticResource Jade}" FontFamily="InterSemibold" HorizontalTextAlignment="Center" />
+                </Border>
+
+                <!-- Tarjetas de plan -->
+                <Grid Margin="18,0" ColumnDefinitions="*,*" ColumnSpacing="10" IsVisible="{Binding IsPremium, Converter={StaticResource InverseBoolConverter}}">
+
+                    <!-- Mensual -->
+                    <Border Grid.Column="0" Padding="14">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectMonthlyCommand}" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Mensual" Style="{StaticResource RowNameLabel}" FontSize="14" />
+                            <Label Text="{Binding MonthlyPrice}" FontFamily="SpaceGroteskSemibold" FontSize="20" TextColor="{StaticResource TextPrimary}" />
+                            <Label Text="por mes" Style="{StaticResource RowSubLabel}" FontSize="11" />
+                        </VerticalStackLayout>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsMonthlySelected}" Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource Gold}" />
+                                <Setter Property="StrokeThickness" Value="2" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                    </Border>
+
+                    <!-- Anual -->
+                    <Border Grid.Column="1" Padding="14">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectYearlyCommand}" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Anual · Mejor precio" TextColor="{StaticResource Gold}" FontFamily="InterSemibold" FontSize="11" />
+                            <Label Text="{Binding YearlyPrice}" FontFamily="SpaceGroteskSemibold" FontSize="20" TextColor="{StaticResource TextPrimary}" />
+                            <Label Text="por año" Style="{StaticResource RowSubLabel}" FontSize="11" />
+                        </VerticalStackLayout>
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsYearlySelected}" Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource Gold}" />
+                                <Setter Property="StrokeThickness" Value="2" />
+                            </DataTrigger>
+                        </Border.Triggers>
+                    </Border>
+                </Grid>
+
+                <!-- Beneficios completos -->
+                <Border Margin="18,0" Padding="16">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Todo lo que incluye Premium" Style="{StaticResource RowNameLabel}" FontSize="14" />
+
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <Label Grid.Column="0" Text="✓" TextColor="{StaticResource Jade}" FontFamily="InterSemibold" />
+                            <Label Grid.Column="1" Text="Contraseñas ilimitadas (el plan Free guarda hasta 15)" FontSize="12.5" TextColor="{StaticResource TextPrimary}" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <Label Grid.Column="0" Text="✓" TextColor="{StaticResource Jade}" FontFamily="InterSemibold" />
+                            <Label Grid.Column="1" Text="Carpetas y categorías ilimitadas para organizar tus cuentas" FontSize="12.5" TextColor="{StaticResource TextPrimary}" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <Label Grid.Column="0" Text="✓" TextColor="{StaticResource Jade}" FontFamily="InterSemibold" />
+                            <Label Grid.Column="1" Text="Copia de seguridad cifrada, exportable a otro dispositivo" FontSize="12.5" TextColor="{StaticResource TextPrimary}" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <Label Grid.Column="0" Text="✓" TextColor="{StaticResource Jade}" FontFamily="InterSemibold" />
+                            <Label Grid.Column="1" Text="Alertas de filtraciones de datos conocidas" FontSize="12.5" TextColor="{StaticResource TextPrimary}" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <Label Grid.Column="0" Text="✓" TextColor="{StaticResource Jade}" FontFamily="InterSemibold" />
+                            <Label Grid.Column="1" Text="Bloqueo automático configurable hasta 10 minutos" FontSize="12.5" TextColor="{StaticResource TextPrimary}" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <Label Grid.Column="0" Text="✓" TextColor="{StaticResource Jade}" FontFamily="InterSemibold" />
+                            <Label Grid.Column="1" Text="Sin anuncios en ninguna pantalla" FontSize="12.5" TextColor="{StaticResource TextPrimary}" />
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <Label Grid.Column="0" Text="✓" TextColor="{StaticResource Jade}" FontFamily="InterSemibold" />
+                            <Label Grid.Column="1" Text="Soporte prioritario" FontSize="12.5" TextColor="{StaticResource TextPrimary}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label Text="{Binding StatusMessage}"
+                       HorizontalTextAlignment="Center"
+                       Margin="18,0"
+                       IsVisible="{Binding StatusMessage, Converter={StaticResource StringNotEmptyConverter}}">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding StatusMessageIsError}" Value="True">
+                            <Setter Property="TextColor" Value="{StaticResource Danger}" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Label" Binding="{Binding StatusMessageIsError}" Value="False">
+                            <Setter Property="TextColor" Value="{StaticResource Jade}" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <VerticalStackLayout Padding="22,0" Spacing="10" IsVisible="{Binding IsPremium, Converter={StaticResource InverseBoolConverter}}">
+                    <Button Text="Continuar con Premium" Style="{StaticResource GoldButton}" Command="{Binding PurchaseCommand}" />
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+                    <Button Text="Restaurar compras" Style="{StaticResource TextButton}" Command="{Binding RestoreCommand}" />
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

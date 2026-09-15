@@ -1,14 +1,94 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PasswordSave.ViewModels"
              xmlns:common="clr-namespace:PasswordSave.Common"
              x:Class="PasswordSave.Views.SettingsPage"
+             x:DataType="viewmodels:SettingsViewModel"
              NavigationPage.HasNavigationBar="False">
-    <Grid RowDefinitions="*,Auto">
-        <VerticalStackLayout Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center" Spacing="8">
-            <Label Text="Ajustes" Style="{StaticResource TitleLabel}" HorizontalOptions="Center" />
-            <Label Text="Próximo paso: timeout de inactividad, backup, cerrar sesión." Style="{StaticResource SubtitleLabel}" HorizontalOptions="Center" />
-        </VerticalStackLayout>
-        <common:BottomTabBar Grid.Row="1" ActiveTab="Ajustes" TabSelected="OnTabSelected" />
+
+    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="0">
+
+        <Label Grid.Row="0" Text="Ajustes" Style="{StaticResource TitleLabel}" FontSize="17" Padding="18,14,18,6" />
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="18,0,18,18" Spacing="16">
+
+                <!-- Contraseña maestra -->
+                <Border>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Contraseña maestra" Style="{StaticResource RowNameLabel}" FontSize="14" />
+                        <Entry Text="{Binding CurrentMasterPassword}" IsPassword="True" Placeholder="Contraseña actual" />
+                        <Entry Text="{Binding NewMasterPassword}" IsPassword="True" Placeholder="Contraseña nueva (mín. 8 caracteres)" />
+                        <Entry Text="{Binding ConfirmNewMasterPassword}" IsPassword="True" Placeholder="Confirmar contraseña nueva" />
+
+                        <Label Text="{Binding MasterPasswordMessage}"
+                               FontSize="12"
+                               IsVisible="{Binding MasterPasswordMessage, Converter={StaticResource StringNotEmptyConverter}}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding MasterPasswordMessageIsError}" Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource Danger}" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding MasterPasswordMessageIsError}" Value="False">
+                                    <Setter Property="TextColor" Value="{StaticResource Jade}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+
+                        <Button Text="Cambiar contraseña maestra" Style="{StaticResource SecondaryButton}" Command="{Binding ChangeMasterPasswordCommand}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- PIN -->
+                <Border>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="PIN de acceso rápido" Style="{StaticResource RowNameLabel}" FontSize="14" />
+                        <Entry Text="{Binding CurrentPin}" IsPassword="True" Keyboard="Numeric" MaxLength="6" Placeholder="PIN actual" />
+                        <Entry Text="{Binding NewPin}" IsPassword="True" Keyboard="Numeric" MaxLength="6" Placeholder="PIN nuevo (4 a 6 dígitos)" />
+                        <Entry Text="{Binding ConfirmNewPin}" IsPassword="True" Keyboard="Numeric" MaxLength="6" Placeholder="Confirmar PIN nuevo" />
+
+                        <Label Text="{Binding PinMessage}"
+                               FontSize="12"
+                               IsVisible="{Binding PinMessage, Converter={StaticResource StringNotEmptyConverter}}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding PinMessageIsError}" Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource Danger}" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding PinMessageIsError}" Value="False">
+                                    <Setter Property="TextColor" Value="{StaticResource Jade}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+
+                        <Button Text="Cambiar PIN" Style="{StaticResource SecondaryButton}" Command="{Binding ChangePinCommand}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Bloqueo automático -->
+                <Border>
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0" Text="Bloqueo automático" Style="{StaticResource RowNameLabel}" FontSize="14" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="{Binding InactivityTimeoutMinutes, StringFormat='{0} min'}" Style="{StaticResource RowNameLabel}" VerticalOptions="Center" />
+                        </Grid>
+                        <Slider Minimum="1" Maximum="{Binding MaxInactivityMinutes}" Value="{Binding InactivityTimeoutMinutes}"
+                                MinimumTrackColor="{StaticResource Jade}" ThumbColor="{StaticResource Jade}" />
+                        <Label Text="Hazte Premium para extenderlo hasta 10 minutos."
+                               Style="{StaticResource SubtitleLabel}" FontSize="11"
+                               TextColor="{StaticResource Gold}"
+                               IsVisible="{Binding IsPremium, Converter={StaticResource InverseBoolConverter}}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Cerrar sesión -->
+                <Button Text="Cerrar sesión" Style="{StaticResource TextButton}" TextColor="{StaticResource Danger}" Command="{Binding LogoutCommand}" />
+
+                <Label x:Name="version" Style="{StaticResource SubtitleLabel}" FontSize="11" HorizontalTextAlignment="Center" Margin="0,8,0,0" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <common:BottomTabBar Grid.Row="2" ActiveTab="Ajustes" TabSelected="OnTabSelected" />
+
     </Grid>
 </ContentPage>

@@ -92,11 +92,15 @@ public static class MauiProgram
         services.AddTransient<HomePage>();
         services.AddTransient<GeneratorViewModel>();
         services.AddTransient<GeneratorPage>();
+        services.AddTransient<CategoriesViewModel>();
         services.AddTransient<CategoriesPage>();
+        services.AddTransient<SettingsViewModel>();
         services.AddTransient<SettingsPage>();
         services.AddTransient<PaywallPage>();
         services.AddTransient<AddEditCredentialViewModel>();
         services.AddTransient<AddEditCredentialPage>();
+        services.AddTransient<StoreViewModel>();
+        services.AddTransient<StorePage>();
     }
 
     /// <summary>

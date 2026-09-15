@@ -1,8 +1,6 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
-using Microsoft.Maui.Storage;
 using PasswordSave.Models;
 using PasswordSave.Services.Abstractions;
 
@@ -20,12 +18,7 @@ namespace PasswordSave.Services;
 /// </summary>
 public sealed class VaultMetadataStore : IVaultMetadataStore
 {
-    private const string DatabaseFileName = "passwordsave.db3";
-
-    private static string DatabasePath =>
-        Path.Combine(FileSystem.Current.AppDataDirectory, DatabaseFileName);
-
-    private static string ConnectionString => $"Data Source={DatabasePath}";
+    private static string ConnectionString => DatabasePaths.ConnectionString;
 
     public async Task<bool> VaultExistsAsync()
     {
@@ -57,6 +50,32 @@ public sealed class VaultMetadataStore : IVaultMetadataStore
         command.CommandText = """
             INSERT INTO vault_metadata (id, salt, iterations, wrapped_vault_key)
             VALUES (1, $salt, $iterations, $wrappedVaultKey);
+            """;
+        command.Parameters.AddWithValue("$salt", kdfParameters.Salt);
+        command.Parameters.AddWithValue("$iterations", kdfParameters.Iterations);
+        command.Parameters.AddWithValue("$wrappedVaultKey", wrappedVaultKey.ToBytes());
+
+        await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+    }
+
+    public async Task UpdateVaultAsync(KdfParameters kdfParameters, EncryptedPayload wrappedVaultKey)
+    {
+        ArgumentNullException.ThrowIfNull(kdfParameters);
+        ArgumentNullException.ThrowIfNull(wrappedVaultKey);
+
+        await EnsureTableExistsAsync().ConfigureAwait(false);
+
+        if (!await VaultExistsAsync().ConfigureAwait(false))
+            throw new InvalidOperationException("No hay ningún vault creado todavía en este dispositivo.");
+
+        await using var connection = new SqliteConnection(ConnectionString);
+        await connection.OpenAsync().ConfigureAwait(false);
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            UPDATE vault_metadata
+            SET salt = $salt, iterations = $iterations, wrapped_vault_key = $wrappedVaultKey
+            WHERE id = 1;
             """;
         command.Parameters.AddWithValue("$salt", kdfParameters.Salt);
         command.Parameters.AddWithValue("$iterations", kdfParameters.Iterations);

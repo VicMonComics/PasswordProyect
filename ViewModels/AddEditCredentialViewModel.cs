@@ -14,12 +14,14 @@ public sealed class AddEditCredentialViewModel : ObservableObject
 {
     private readonly ICredentialRepository _credentialRepository;
     private readonly IPasswordGeneratorService _generatorService;
+    private readonly IPremiumStatusService _premiumStatusService;
 
-    // TODO premium: cuando exista la lógica de categorías propias del
-    // usuario (solo Premium — ver nota en el área del proyecto), esta lista
-    // deja de ser fija y se carga desde un CategoryRepository, más una
-    // opción "Crear categoría" visible solo si IPremiumStatusService dice
-    // que el usuario es premium.
+    // TODO premium: cuando exista la lógica de categorías PROPIAS del
+    // usuario (crear sus propias carpetas, no solo elegir entre estas 4 —
+    // ver nota en el área del proyecto), esta lista fija de todas formas
+    // deja de ser la única fuente; por ahora, cuáles de estas 4 puede
+    // ELEGIR el usuario ya sí depende de IPremiumStatusService (ver
+    // BuildCategoryOptions).
     public static readonly string[] CategoryOptions = { "General", "Trabajo", "Finanzas", "Familia" };
 
     private string? _id;
@@ -32,6 +34,8 @@ public sealed class AddEditCredentialViewModel : ObservableObject
     private bool _isFavorite;
     private bool _isPasswordVisible;
     private bool _isEditMode;
+    private bool _isPremium;
+    private bool _isAtFreeLimit;
     private string _strengthLabel = string.Empty;
     private double _strengthFraction;
     private string? _errorMessage;
@@ -39,12 +43,13 @@ public sealed class AddEditCredentialViewModel : ObservableObject
 
     public event EventHandler? Closed;
 
-    public AddEditCredentialViewModel(ICredentialRepository credentialRepository, IPasswordGeneratorService generatorService)
+    public AddEditCredentialViewModel(ICredentialRepository credentialRepository, IPasswordGeneratorService generatorService, IPremiumStatusService premiumStatusService)
     {
         _credentialRepository = credentialRepository;
         _generatorService = generatorService;
+        _premiumStatusService = premiumStatusService;
 
-        SaveCommand = new AsyncRelayCommand(SaveAsync, () => !IsBusy);
+        SaveCommand = new AsyncRelayCommand(SaveAsync, () => !IsBusy && !IsAtFreeLimit);
         DeleteCommand = new AsyncRelayCommand(DeleteAsync, () => !IsBusy && IsEditMode);
         TogglePasswordVisibilityCommand = new RelayCommand(() => IsPasswordVisible = !IsPasswordVisible);
         CopyUsernameCommand = new AsyncRelayCommand(() => CopyAsync(Username));
@@ -56,7 +61,7 @@ public sealed class AddEditCredentialViewModel : ObservableObject
     public string SaveButtonText => IsEditMode ? "Guardar cambios" : "Guardar";
     public string AvatarInitial => SiteName.Length > 0 ? SiteName[..1].ToUpperInvariant() : "?";
 
-    public ObservableCollection<string> CategoryOptionsList { get; } = new(CategoryOptions);
+    public ObservableCollection<string> CategoryOptionsList { get; } = new();
 
     public string SiteName
     {
@@ -143,6 +148,16 @@ public sealed class AddEditCredentialViewModel : ObservableObject
         private set => SetProperty(ref _strengthFraction, value);
     }
 
+    public bool IsAtFreeLimit
+    {
+        get => _isAtFreeLimit;
+        private set
+        {
+            if (SetProperty(ref _isAtFreeLimit, value))
+                ((AsyncRelayCommand)SaveCommand).RaiseCanExecuteChanged();
+        }
+    }
+
     public string? ErrorMessage
     {
         get => _errorMessage;
@@ -174,6 +189,7 @@ public sealed class AddEditCredentialViewModel : ObservableObject
     {
         _id = entryId;
         IsEditMode = entryId is not null;
+        _isPremium = await _premiumStatusService.IsPremiumAsync();
 
         if (entryId is not null)
         {
@@ -189,10 +205,40 @@ public sealed class AddEditCredentialViewModel : ObservableObject
                 IsFavorite = entry.IsFavorite;
             }
         }
-        else if (!string.IsNullOrEmpty(prefilledPassword))
+        else
         {
-            Password = prefilledPassword;
+            if (!string.IsNullOrEmpty(prefilledPassword))
+                Password = prefilledPassword;
+
+            // El límite del plan Free solo aplica a AGREGAR (editar una
+            // credencial que ya existe no aumenta el total).
+            if (!_isPremium)
+            {
+                var currentCount = (await _credentialRepository.GetAllAsync()).Count;
+                IsAtFreeLimit = currentCount >= PremiumLimits.FreeTierCredentialLimit;
+            }
         }
+
+        BuildCategoryOptions();
+    }
+
+    /// <summary>
+    /// Sin Premium, solo se puede elegir entre PremiumLimits.FreeCategories.
+    /// Si la credencial ya traía una categoría fuera de esa lista (p. ej.
+    /// se guardó cuando el usuario sí era premium y luego canceló), se
+    /// conserva como opción extra para no perder el dato ni forzar un
+    /// cambio silencioso de categoría.
+    /// </summary>
+    private void BuildCategoryOptions()
+    {
+        CategoryOptionsList.Clear();
+
+        var allowed = _isPremium ? CategoryOptions : PremiumLimits.FreeCategories;
+        foreach (var option in allowed)
+            CategoryOptionsList.Add(option);
+
+        if (!CategoryOptionsList.Contains(Category))
+            CategoryOptionsList.Insert(0, Category);
     }
 
     private void GenerateNewPassword()
@@ -245,6 +291,20 @@ public sealed class AddEditCredentialViewModel : ObservableObject
         {
             ErrorMessage = "La contraseña no puede estar vacía.";
             return;
+        }
+
+        if (!IsEditMode && !_isPremium)
+        {
+            // Re-verifica en vez de confiar solo en IsAtFreeLimit (calculado
+            // al abrir la página): protege contra el caso de agregar varias
+            // credenciales seguidas sin volver a InitializeAsync.
+            var currentCount = (await _credentialRepository.GetAllAsync()).Count;
+            if (currentCount >= PremiumLimits.FreeTierCredentialLimit)
+            {
+                IsAtFreeLimit = true;
+                ErrorMessage = $"Llegaste al límite de {PremiumLimits.FreeTierCredentialLimit} contraseñas del plan Free.";
+                return;
+            }
         }
 
         IsBusy = true;
