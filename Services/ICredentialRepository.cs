@@ -20,4 +20,18 @@ public interface ICredentialRepository
     Task SaveAsync(CredentialEntry entry);
 
     Task DeleteAsync(string id);
+
+    /// <summary>
+    /// Todas las filas TAL CUAL están en SQLite, sin descifrar. Solo para
+    /// empacar un backup — a diferencia del resto de los métodos, no
+    /// requiere el vault desbloqueado (no toca la vault key para nada).
+    /// </summary>
+    Task<IReadOnlyList<RawCredentialRow>> GetAllRawAsync();
+
+    /// <summary>
+    /// Reemplaza TODO el contenido de la tabla con estas filas (ya
+    /// cifradas) — solo para restaurar un backup completo en un
+    /// dispositivo nuevo. Borra cualquier fila que hubiera antes.
+    /// </summary>
+    Task ReplaceAllRawAsync(IReadOnlyList<RawCredentialRow> rows);
 }

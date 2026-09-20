@@ -1,10 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
-using Plugin.Maui.Biometric;
 using PasswordSave.Services;
 using PasswordSave.Services.Abstractions;
 using PasswordSave.ViewModels;
 using PasswordSave.Views;
+using Plugin.Maui.Biometric;
+#if ANDROID
+using Plugin.MauiMTAdmob;
+#endif
 
 namespace PasswordSave;
 
@@ -15,6 +18,9 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+#if ANDROID
+                .UseMauiMTAdmob()
+#endif
             .ConfigureFonts(fonts =>
             {
                 // Agrega los .ttf reales a Resources/Fonts/ (descárgalos de
@@ -69,11 +75,18 @@ public static class MauiProgram
         // mismo, solo guarda los bytes que ya llegan cifrados).
         services.AddSingleton<IVaultMetadataStore, VaultMetadataStore>();
 
-        // IPremiumStatusService: stub hasta conectar la tienda real (ver
-        // nota en StubPremiumStatusService).
-        services.AddSingleton<IPremiumStatusService, StubPremiumStatusService>();
+        // IPremiumStatusService: implementación real (Google Play Billing /
+        // Plugin.InAppBilling). Antes era StubPremiumStatusService — ese
+        // archivo se queda en el proyecto sin usar, por si algún día hace
+        // falta para pruebas.
+        services.AddSingleton<IPremiumStatusService, PremiumStatusService>();
 
         services.AddSingleton<IPasswordGeneratorService, PasswordGeneratorService>();
+
+        // IBackupService: empaqueta/restaura el vault completo (backup
+        // cifrado exportable) — reusa los bytes ya cifrados, no vuelve a
+        // cifrar nada.
+        services.AddSingleton<IBackupService, BackupService>();
 
         // ICredentialRepository: cifra username/password/website/notes por
         // campo con la vault key de la sesión (IVaultSessionService); lanza

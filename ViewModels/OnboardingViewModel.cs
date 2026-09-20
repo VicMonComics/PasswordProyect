@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using Microsoft.Maui.Storage;
 using PasswordSave.Common;
 using PasswordSave.Services.Abstractions;
 
@@ -11,6 +12,7 @@ public sealed class OnboardingViewModel : ObservableObject
     private readonly IVaultMetadataStore _vaultMetadataStore;
     private readonly IAppLockService _appLockService;
     private readonly IVaultSessionService _vaultSessionService;
+    private readonly IBackupService _backupService;
 
     private string _masterPassword = string.Empty;
     private string _confirmMasterPassword = string.Empty;
@@ -21,20 +23,26 @@ public sealed class OnboardingViewModel : ObservableObject
 
     public event EventHandler? VaultCreated;
 
+    /// <summary>Restauró un backup: ya existe un vault, pero hay que iniciar sesión normal (con la contraseña maestra), no queda desbloqueado automáticamente.</summary>
+    public event EventHandler? RestoredFromBackup;
+
     public OnboardingViewModel(
         IKeyDerivationService keyDerivationService,
         IVaultKeyService vaultKeyService,
         IVaultMetadataStore vaultMetadataStore,
         IAppLockService appLockService,
-        IVaultSessionService vaultSessionService)
+        IVaultSessionService vaultSessionService,
+        IBackupService backupService)
     {
         _keyDerivationService = keyDerivationService;
         _vaultKeyService = vaultKeyService;
         _vaultMetadataStore = vaultMetadataStore;
         _appLockService = appLockService;
         _vaultSessionService = vaultSessionService;
+        _backupService = backupService;
 
         CreateVaultCommand = new AsyncRelayCommand(CreateVaultAsync, () => !IsBusy);
+        RestoreFromBackupCommand = new AsyncRelayCommand(RestoreFromBackupAsync, () => !IsBusy);
     }
 
     public string MasterPassword
@@ -73,11 +81,15 @@ public sealed class OnboardingViewModel : ObservableObject
         private set
         {
             if (SetProperty(ref _isBusy, value))
+            {
                 ((AsyncRelayCommand)CreateVaultCommand).RaiseCanExecuteChanged();
+                ((AsyncRelayCommand)RestoreFromBackupCommand).RaiseCanExecuteChanged();
+            }
         }
     }
 
     public ICommand CreateVaultCommand { get; }
+    public ICommand RestoreFromBackupCommand { get; }
 
     private async Task CreateVaultAsync()
     {
@@ -127,6 +139,37 @@ public sealed class OnboardingViewModel : ObservableObject
         {
             // p. ej. "ya existe un vault" si el usuario llegó dos veces a esta pantalla.
             ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task RestoreFromBackupAsync()
+    {
+        ErrorMessage = null;
+        IsBusy = true;
+        try
+        {
+            var result = await FilePicker.Default.PickAsync(new PickOptions
+            {
+                PickerTitle = "Selecciona tu backup de PasswordSave",
+            });
+
+            if (result is null)
+                return; // el usuario canceló el selector, no es un error
+
+            await _backupService.RestoreBackupAsync(result.FullPath);
+            RestoredFromBackup?.Invoke(this, EventArgs.Empty);
+        }
+        catch (InvalidOperationException ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        catch (Exception)
+        {
+            ErrorMessage = "No se pudo restaurar el backup. Verifica que sea un archivo válido de PasswordSave.";
         }
         finally
         {

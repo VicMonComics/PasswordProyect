@@ -39,6 +39,8 @@
 
             <Button Text="Crear bóveda" Command="{Binding CreateVaultCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
 
+            <Button Text="Restaurar desde un backup" Style="{StaticResource TextButton}" Command="{Binding RestoreFromBackupCommand}" />
+
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
 
         </VerticalStackLayout>

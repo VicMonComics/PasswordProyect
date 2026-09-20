@@ -14,6 +14,7 @@ public sealed class SettingsViewModel : ObservableObject
     private readonly IVaultMetadataStore _vaultMetadataStore;
     private readonly IKeyDerivationService _keyDerivationService;
     private readonly IPremiumStatusService _premiumStatusService;
+    private readonly IBackupService _backupService;
 
     private string _currentMasterPassword = string.Empty;
     private string _newMasterPassword = string.Empty;
@@ -31,24 +32,32 @@ public sealed class SettingsViewModel : ObservableObject
     private int _maxInactivityMinutes = 5;
     private int _inactivityTimeoutMinutes = 5;
 
+    private string? _backupMessage;
+    private bool _backupMessageIsError;
+
     private bool _isBusy;
+
+    public event EventHandler<string>? BackupFileReady;
 
     public SettingsViewModel(
         IAppLockService appLockService,
         IVaultKeyService vaultKeyService,
         IVaultMetadataStore vaultMetadataStore,
         IKeyDerivationService keyDerivationService,
-        IPremiumStatusService premiumStatusService)
+        IPremiumStatusService premiumStatusService,
+        IBackupService backupService)
     {
         _appLockService = appLockService;
         _vaultKeyService = vaultKeyService;
         _vaultMetadataStore = vaultMetadataStore;
         _keyDerivationService = keyDerivationService;
         _premiumStatusService = premiumStatusService;
+        _backupService = backupService;
 
         ChangeMasterPasswordCommand = new AsyncRelayCommand(ChangeMasterPasswordAsync, () => !IsBusy);
         ChangePinCommand = new AsyncRelayCommand(ChangePinAsync, () => !IsBusy);
         LogoutCommand = new AsyncRelayCommand(LogoutAsync, () => !IsBusy);
+        ExportBackupCommand = new AsyncRelayCommand(ExportBackupAsync, () => !IsBusy);
     }
 
     public string CurrentMasterPassword
@@ -139,6 +148,18 @@ public sealed class SettingsViewModel : ObservableObject
         }
     }
 
+    public string? BackupMessage
+    {
+        get => _backupMessage;
+        private set => SetProperty(ref _backupMessage, value);
+    }
+
+    public bool BackupMessageIsError
+    {
+        get => _backupMessageIsError;
+        private set => SetProperty(ref _backupMessageIsError, value);
+    }
+
     public bool IsBusy
     {
         get => _isBusy;
@@ -149,6 +170,7 @@ public sealed class SettingsViewModel : ObservableObject
                 ((AsyncRelayCommand)ChangeMasterPasswordCommand).RaiseCanExecuteChanged();
                 ((AsyncRelayCommand)ChangePinCommand).RaiseCanExecuteChanged();
                 ((AsyncRelayCommand)LogoutCommand).RaiseCanExecuteChanged();
+                ((AsyncRelayCommand)ExportBackupCommand).RaiseCanExecuteChanged();
             }
         }
     }
@@ -156,6 +178,7 @@ public sealed class SettingsViewModel : ObservableObject
     public ICommand ChangeMasterPasswordCommand { get; }
     public ICommand ChangePinCommand { get; }
     public ICommand LogoutCommand { get; }
+    public ICommand ExportBackupCommand { get; }
 
     public async Task InitializeAsync()
     {
@@ -277,6 +300,39 @@ public sealed class SettingsViewModel : ObservableObject
         // la sesión y regresar a LoginPage — cerrar sesión manualmente es,
         // en los hechos, forzar ese mismo bloqueo.
         await _appLockService.LockAsync();
+    }
+
+    private async Task ExportBackupAsync()
+    {
+        BackupMessage = null;
+
+        // PENDIENTE: reactivar antes de publicar. Comentado a propósito
+        // (pedido explícito) para poder probar el backup libremente
+        // durante el desarrollo, sin necesitar una suscripción Premium real.
+        // if (!IsPremium)
+        // {
+        //     BackupMessageIsError = true;
+        //     BackupMessage = "Exportar un backup es una función Premium.";
+        //     return;
+        // }
+
+        IsBusy = true;
+        try
+        {
+            var filePath = await _backupService.CreateBackupFileAsync();
+            BackupMessageIsError = false;
+            BackupMessage = "Backup generado. Elige dónde guardarlo o compartirlo.";
+            BackupFileReady?.Invoke(this, filePath);
+        }
+        catch (Exception ex)
+        {
+            BackupMessageIsError = true;
+            BackupMessage = $"No se pudo generar el backup: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private void SetMasterPasswordError(string message)

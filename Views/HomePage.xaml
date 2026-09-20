@@ -8,11 +8,11 @@
              x:DataType="viewmodels:HomeViewModel"
              NavigationPage.HasNavigationBar="False">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="0">
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" RowSpacing="0">
 
         <!-- Topbar -->
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="18,14,18,6">
-            <Label Grid.Column="0" Text="PasswordSave" Style="{StaticResource TitleLabel}" VerticalOptions="Center" />
+            <Label Grid.Column="0" Text="MiLlavero Personal" Style="{StaticResource TitleLabel}" VerticalOptions="Center" />
             <Border Grid.Column="1" WidthRequest="34" HeightRequest="34" Padding="0" StrokeShape="RoundRectangle 10">
                 <Label Text="⚙" TextColor="{StaticResource TextSecondary}" FontSize="16" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
             </Border>
@@ -100,7 +100,7 @@
                     <Label Text="🔍" FontSize="34" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="{StaticResource Jade}" />
                 </Border>
                 <Label Text="Aún no guardas nada aquí" Style="{StaticResource TitleLabel}" FontSize="16" HorizontalTextAlignment="Center" />
-                <Label Text="Agrega tu primera contraseña y PasswordSave la protegerá con cifrado de extremo a extremo."
+                <Label Text="Agrega tu primera contraseña y MiLLavero Personal la protegerá con cifrado de extremo a extremo."
                        Style="{StaticResource SubtitleLabel}"
                        HorizontalTextAlignment="Center" />
             </VerticalStackLayout>
@@ -121,8 +121,11 @@
                     Clicked="OnAddClicked" />
         </Grid>
 
+        <!-- Publicidad (oculto si es premium) -->
+        <common:AdBlockView Grid.Row="4" AdsId="{x:Static common:AdUnitIds.Home}" Margin="10,4" />
+
         <!-- Barra inferior -->
-        <common:BottomTabBar Grid.Row="4" x:Name="TabBar" ActiveTab="Inicio" TabSelected="OnTabSelected" />
+        <common:BottomTabBar Grid.Row="5" x:Name="TabBar" ActiveTab="Inicio" TabSelected="OnTabSelected" />
 
     </Grid>
 </ContentPage>

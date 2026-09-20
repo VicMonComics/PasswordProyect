@@ -131,6 +131,82 @@ public sealed class CredentialRepository : ICredentialRepository
         await command.ExecuteNonQueryAsync().ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyList<RawCredentialRow>> GetAllRawAsync()
+    {
+        // Sin RequireVaultKey a propósito: empacar un backup no necesita
+        // descifrar nada, así que no debería exigir sesión desbloqueada.
+        await EnsureTableExistsAsync().ConfigureAwait(false);
+
+        await using var connection = new SqliteConnection(DatabasePaths.ConnectionString);
+        await connection.OpenAsync().ConfigureAwait(false);
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            SELECT id, site_name, category, is_favorite, username_encrypted, password_encrypted, website_encrypted, notes_encrypted
+            FROM password_entries;
+            """;
+
+        var results = new List<RawCredentialRow>();
+        await using var reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
+        while (await reader.ReadAsync().ConfigureAwait(false))
+        {
+            results.Add(new RawCredentialRow
+            {
+                Id = reader.GetString(reader.GetOrdinal("id")),
+                SiteName = reader.GetString(reader.GetOrdinal("site_name")),
+                Category = reader.GetString(reader.GetOrdinal("category")),
+                IsFavorite = reader.GetInt32(reader.GetOrdinal("is_favorite")) != 0,
+                UsernameEncrypted = (byte[])reader["username_encrypted"],
+                PasswordEncrypted = (byte[])reader["password_encrypted"],
+                WebsiteEncrypted = (byte[])reader["website_encrypted"],
+                NotesEncrypted = (byte[])reader["notes_encrypted"],
+            });
+        }
+
+        return results;
+    }
+
+    public async Task ReplaceAllRawAsync(IReadOnlyList<RawCredentialRow> rows)
+    {
+        ArgumentNullException.ThrowIfNull(rows);
+        await EnsureTableExistsAsync().ConfigureAwait(false);
+
+        await using var connection = new SqliteConnection(DatabasePaths.ConnectionString);
+        await connection.OpenAsync().ConfigureAwait(false);
+
+        await using var transaction = connection.BeginTransaction();
+
+        await using (var deleteCommand = connection.CreateCommand())
+        {
+            deleteCommand.Transaction = transaction;
+            deleteCommand.CommandText = "DELETE FROM password_entries;";
+            await deleteCommand.ExecuteNonQueryAsync().ConfigureAwait(false);
+        }
+
+        foreach (var row in rows)
+        {
+            await using var insertCommand = connection.CreateCommand();
+            insertCommand.Transaction = transaction;
+            insertCommand.CommandText = """
+                INSERT INTO password_entries (id, site_name, category, is_favorite, username_encrypted, password_encrypted, website_encrypted, notes_encrypted, created_at, updated_at)
+                VALUES ($id, $siteName, $category, $isFavorite, $username, $password, $website, $notes, $now, $now);
+                """;
+            insertCommand.Parameters.AddWithValue("$id", row.Id);
+            insertCommand.Parameters.AddWithValue("$siteName", row.SiteName);
+            insertCommand.Parameters.AddWithValue("$category", row.Category);
+            insertCommand.Parameters.AddWithValue("$isFavorite", row.IsFavorite ? 1 : 0);
+            insertCommand.Parameters.AddWithValue("$username", row.UsernameEncrypted);
+            insertCommand.Parameters.AddWithValue("$password", row.PasswordEncrypted);
+            insertCommand.Parameters.AddWithValue("$website", row.WebsiteEncrypted);
+            insertCommand.Parameters.AddWithValue("$notes", row.NotesEncrypted);
+            insertCommand.Parameters.AddWithValue("$now", DateTime.UtcNow.ToString("O"));
+
+            await insertCommand.ExecuteNonQueryAsync().ConfigureAwait(false);
+        }
+
+        await transaction.CommitAsync().ConfigureAwait(false);
+    }
+
     private CredentialEntry ReadEntry(SqliteDataReader reader, byte[] vaultKey)
     {
         var id = reader.GetString(reader.GetOrdinal("id"));

@@ -30,6 +30,7 @@
         <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
         <Setter Property="FontFamily" Value="SpaceGroteskSemibold" />
         <Setter Property="FontSize" Value="21" />
+        <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
     <Style x:Key="SubtitleLabel" TargetType="Label">

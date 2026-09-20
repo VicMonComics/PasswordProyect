@@ -12,8 +12,7 @@
 
             <common:InverseBoolConverter x:Key="InverseBoolConverter" />
             <common:StringNotEmptyConverter x:Key="StringNotEmptyConverter" />
-           
+            <common:HexColorConverter x:Key="HexColorConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
-<!--<common:HexColorConverter x:Key="HexColorConverter" />-->

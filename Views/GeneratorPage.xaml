@@ -7,7 +7,7 @@
              x:DataType="viewmodels:GeneratorViewModel"
              NavigationPage.HasNavigationBar="False">
 
-    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" RowSpacing="0" Padding="0,14,0,0">
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto,Auto" RowSpacing="0" Padding="0,14,0,0">
 
         <Label Grid.Row="0" Text="Generar contraseña" Style="{StaticResource TitleLabel}" FontSize="17" Padding="18,0,18,10" />
 
@@ -102,7 +102,9 @@
             <Button Text="Usar esta contraseña" Clicked="OnUseClicked" />
         </VerticalStackLayout>
 
-        <common:BottomTabBar Grid.Row="5" ActiveTab="Generador" TabSelected="OnTabSelected" />
+        <common:AdBlockView Grid.Row="5" AdsId="{x:Static common:AdUnitIds.Generator}" Margin="10,4" />
+
+        <common:BottomTabBar Grid.Row="6" ActiveTab="Generador" TabSelected="OnTabSelected" />
 
     </Grid>
 </ContentPage>

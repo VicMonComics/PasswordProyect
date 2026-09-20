@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:common="clr-namespace:PasswordSave.Common"
+             x:Class="PasswordSave.Common.CarruselPublicidad">
+
+    <!--
+        A diferencia de tu CarruselPublicidad original (que descarga
+        imágenes PNG de un servidor propio), este no tiene imágenes reales
+        que mostrar todavía — son diapositivas de texto con el mismo
+        sistema de diseño de la app, invitando a Premium. Si más adelante
+        quieres imágenes de verdad, se cambia el DataTemplate de abajo sin
+        tocar la lógica de rotación.
+    -->
+    <Grid RowDefinitions="Auto,10">
+        <Border Grid.Row="0" HeightRequest="50" Padding="10,0" BackgroundColor="{StaticResource GoldDim}" Stroke="{StaticResource GoldSoft}">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnTapped" />
+            </Border.GestureRecognizers>
+            <CarouselView x:Name="Carousel" Loop="True" IndicatorView="Indicadores" HeightRequest="50">
+                <CarouselView.ItemTemplate>
+                    <DataTemplate x:DataType="common:PublicidadSlideItem">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="🛡" TextColor="{StaticResource Gold}" FontSize="16" VerticalOptions="Center" />
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0">
+                                <Label Text="{Binding Title}" FontFamily="InterSemibold" FontSize="12" TextColor="{StaticResource TextPrimary}" />
+                                <Label Text="{Binding Subtitle}" FontSize="10.5" TextColor="{StaticResource TextSecondary}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+        </Border>
+
+        <IndicatorView x:Name="Indicadores" Grid.Row="1" HorizontalOptions="Center"
+                       IndicatorColor="{StaticResource Border}" SelectedIndicatorColor="{StaticResource Gold}" />
+    </Grid>
+</ContentView>

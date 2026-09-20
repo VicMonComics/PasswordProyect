@@ -7,7 +7,7 @@
              x:DataType="viewmodels:SettingsViewModel"
              NavigationPage.HasNavigationBar="False">
 
-    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="0">
+    <Grid RowDefinitions="Auto,*,Auto,Auto" RowSpacing="0">
 
         <Label Grid.Row="0" Text="Ajustes" Style="{StaticResource TitleLabel}" FontSize="17" Padding="18,14,18,6" />
 
@@ -80,6 +80,30 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <!-- Backup cifrado exportable -->
+                <Border>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Backup cifrado" Style="{StaticResource RowNameLabel}" FontSize="14" />
+                        <Label Text="Genera un archivo cifrado con todas tus contraseñas, para pasarlas a otro dispositivo con PasswordSave instalado."
+                               Style="{StaticResource RowSubLabel}" />
+
+                        <Label Text="{Binding BackupMessage}"
+                               FontSize="12"
+                               IsVisible="{Binding BackupMessage, Converter={StaticResource StringNotEmptyConverter}}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding BackupMessageIsError}" Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource Danger}" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label" Binding="{Binding BackupMessageIsError}" Value="False">
+                                    <Setter Property="TextColor" Value="{StaticResource Jade}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+
+                        <Button Text="Exportar backup" Style="{StaticResource SecondaryButton}" Command="{Binding ExportBackupCommand}" />
+                    </VerticalStackLayout>
+                </Border>
+
                 <!-- Cerrar sesión -->
                 <Button Text="Cerrar sesión" Style="{StaticResource TextButton}" TextColor="{StaticResource Danger}" Command="{Binding LogoutCommand}" />
 
@@ -88,7 +112,9 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <common:BottomTabBar Grid.Row="2" ActiveTab="Ajustes" TabSelected="OnTabSelected" />
+        <common:AdBlockView Grid.Row="2" AdsId="{x:Static common:AdUnitIds.Settings}" Margin="10,4" />
+
+        <common:BottomTabBar Grid.Row="3" ActiveTab="Ajustes" TabSelected="OnTabSelected" />
 
     </Grid>
 </ContentPage>

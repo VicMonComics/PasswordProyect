@@ -19,3 +19,13 @@ public sealed class StringNotEmptyConverter : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         throw new NotSupportedException();
 }
+
+/// <summary>Convierte un string "#RRGGBB" (como los que trae CredentialListItem) a Color.</summary>
+public sealed class HexColorConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is string hex && Color.TryParse(hex, out var color) ? color : Colors.Transparent;
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
