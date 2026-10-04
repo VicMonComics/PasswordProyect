@@ -64,7 +64,7 @@
         </CollectionView>
 
         <VerticalStackLayout Grid.Row="2" VerticalOptions="End" Padding="18,0,18,18" IsVisible="{Binding IsPremium, Converter={StaticResource InverseBoolConverter}}">
-            <Button Text="Ver MiLlavero Personal Premium" Style="{StaticResource GoldButton}" Clicked="OnViewPremiumClicked" />
+            <Button Text="Mi Llavero Premium" Style="{StaticResource GoldButton}" Clicked="OnViewPremiumClicked" />
         </VerticalStackLayout>
 
         <common:AdBlockView Grid.Row="3" AdsId="{x:Static common:AdUnitIds.Categories}" Margin="10,4" />

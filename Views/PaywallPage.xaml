@@ -17,7 +17,7 @@
             <Border WidthRequest="58" HeightRequest="58" Padding="0" Stroke="Transparent" StrokeShape="RoundRectangle 18" HorizontalOptions="Center" Background="{StaticResource GoldGradientBrush}">
                 <Label Text="🛡" FontSize="24" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="{StaticResource OnGold}" />
             </Border>
-            <Label Text="PasswordSave Premium" Style="{StaticResource TitleLabel}" HorizontalTextAlignment="Center" />
+            <Label Text="Mi Llavero" Style="{StaticResource TitleLabel}" HorizontalTextAlignment="Center" />
             <Label Text="Seguridad sin límites para tu vida digital" Style="{StaticResource SubtitleLabel}" HorizontalTextAlignment="Center" />
         </VerticalStackLayout>
 

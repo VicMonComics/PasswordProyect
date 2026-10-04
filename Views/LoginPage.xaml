@@ -9,7 +9,7 @@
     <Grid Padding="28" RowDefinitions="Auto,*,Auto">
 
         <VerticalStackLayout Grid.Row="0" Spacing="4" Margin="0,48,0,0">
-            <Label Text="MiLlavero Personal" Style="{StaticResource TitleLabel}" HorizontalOptions="Center" />
+            <Label Text="Mi Llavero" Style="{StaticResource TitleLabel}" HorizontalOptions="Center" />
             <Label Text="Desbloquea tu bóveda" Style="{StaticResource SubtitleLabel}" HorizontalOptions="Center" />
         </VerticalStackLayout>
 
