@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using PasswordSave.Services.Abstractions;
 using PasswordSave.ViewModels;
 
 namespace PasswordSave.Views;
@@ -33,6 +34,11 @@ public partial class AddEditCredentialPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        // Esta pantalla no pasa por TabNavigationHelper (no es parte del
+        // tabbar), así que necesita su propio registro de actividad —
+        // sobre todo porque aquí el usuario puede pasar varios minutos
+        // escribiendo notas largas sin tocar nada más.
+        _serviceProvider.GetRequiredService<IAppLockService>().RecordActivity();
         await _viewModel.InitializeAsync(_pendingEntryId, _pendingPrefilledPassword);
     }
 

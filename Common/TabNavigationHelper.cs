@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using PasswordSave.Services.Abstractions;
 using PasswordSave.Views;
 
 namespace PasswordSave.Common;
@@ -22,6 +23,12 @@ public static class TabNavigationHelper
 
         if (nextPage is null)
             return;
+
+        // Navegar de una pestaña a otra es, en los hechos, actividad del
+        // usuario — sin esto, IAppLockService nunca se enteraba de que la
+        // app se seguía usando, y el timeout de inactividad podía cerrar
+        // la sesión a mitad de una tarea.
+        services.GetRequiredService<IAppLockService>().RecordActivity();
 
         await navigation.PushAsync(nextPage);
         navigation.RemovePage(currentPage);

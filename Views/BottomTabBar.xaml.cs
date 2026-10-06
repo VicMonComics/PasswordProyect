@@ -3,7 +3,11 @@ namespace PasswordSave.Common;
 public partial class BottomTabBar : ContentView
 {
     public static readonly BindableProperty ActiveTabProperty = BindableProperty.Create(
-        nameof(ActiveTab), typeof(string), typeof(BottomTabBar), "Inicio", propertyChanged: OnActiveTabChanged);
+        nameof(ActiveTab),
+        typeof(string),
+        typeof(BottomTabBar),
+        "Inicio",
+        propertyChanged: OnActiveTabChanged);
 
     public event EventHandler<string>? TabSelected;
 
@@ -24,15 +28,12 @@ public partial class BottomTabBar : ContentView
         ((BottomTabBar)bindable).UpdateHighlight();
     }
 
-    private void OnTabClicked(object? sender, EventArgs e)
+    private void OnTabClicked(object? sender, TappedEventArgs e)
     {
-        if (sender is not Button button)
+        if (e.Parameter is not string tab || tab == ActiveTab)
             return;
 
-        var tab = button.Text;
-        if (tab == ActiveTab)
-            return; // ya estamos en esa pestaña, no hay nada que navegar
-
+        ActiveTab = tab;
         TabSelected?.Invoke(this, tab);
     }
 
@@ -41,7 +42,26 @@ public partial class BottomTabBar : ContentView
         var activeColor = (Color)Application.Current!.Resources["Jade"];
         var inactiveColor = (Color)Application.Current!.Resources["TextTertiary"];
 
-        foreach (var button in new[] { InicioButton, GeneradorButton, CategoriasButton, AjustesButton })
-            button.TextColor = button.Text == ActiveTab ? activeColor : inactiveColor;
+        SetTabColor(InicioButton, "Inicio", activeColor, inactiveColor);
+        SetTabColor(GeneradorButton, "Generador", activeColor, inactiveColor);
+        SetTabColor(CategoriasButton, "Categorías", activeColor, inactiveColor);
+        SetTabColor(AjustesButton, "Ajustes", activeColor, inactiveColor);
+    }
+
+    private static void SetTabColor(
+        VerticalStackLayout tab,
+        string tabName,
+        Color activeColor,
+        Color inactiveColor)
+    {
+        var label = tab.Children.OfType<Label>().FirstOrDefault();
+        var image = tab.Children.OfType<Image>().FirstOrDefault();
+        var isActive = tabName == ((BottomTabBar)tab.Parent.Parent).ActiveTab;
+
+        if (label != null)
+            label.TextColor = isActive ? activeColor : inactiveColor;
+
+        if (image != null)
+            image.Opacity = isActive ? 1.0 : 0.6;
     }
 }

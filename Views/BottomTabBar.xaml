@@ -3,29 +3,108 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PasswordSave.Common.BottomTabBar">
 
-    <!--
-        Simplificación consciente: el prototipo usa un ícono SVG por pestaña;
-        aquí uso solo texto (color activo = Jade, inactivo = TextTertiary)
-        para no depender de una fuente de íconos que todavía no elegimos.
-        Cuando se elija una, se agregan los glyphs sin tocar la navegación.
-    -->
-    <Grid RowDefinitions="Auto" ColumnDefinitions="*,*,*,*"
+    <Grid RowDefinitions="Auto"
+          ColumnDefinitions="*,*,*,*"
           BackgroundColor="{StaticResource BgBase}"
           Padding="6,10,6,16">
 
-        <BoxView Grid.ColumnSpan="4" HeightRequest="1" Color="{StaticResource BorderSoft}" VerticalOptions="Start" Margin="0,-10,0,0" />
+        <BoxView Grid.ColumnSpan="4"
+                 HeightRequest="1"
+                 Color="{StaticResource BorderSoft}"
+                 VerticalOptions="Start"
+                 Margin="0,-10,0,0" />
 
-        <Button x:Name="InicioButton" Grid.Column="0" Text="Inicio"
-                BackgroundColor="Transparent" FontFamily="InterMedium" FontSize="10.5" Padding="0"
-                Clicked="OnTabClicked" />
-        <Button x:Name="GeneradorButton" Grid.Column="1" Text="Generador"
-                BackgroundColor="Transparent" FontFamily="InterMedium" FontSize="10.5" Padding="0"
-                Clicked="OnTabClicked" />
-        <Button x:Name="CategoriasButton" Grid.Column="2" Text="Categorías"
-                BackgroundColor="Transparent" FontFamily="InterMedium" FontSize="10.5" Padding="0"
-                Clicked="OnTabClicked" />
-        <Button x:Name="AjustesButton" Grid.Column="3" Text="Ajustes"
-                BackgroundColor="Transparent" FontFamily="InterMedium" FontSize="10.5" Padding="0"
-                Clicked="OnTabClicked" />
+        <VerticalStackLayout x:Name="InicioButton"
+                             Grid.Column="0"
+                             Spacing="2"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center">
+
+            <VerticalStackLayout.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnTabClicked"
+                                      CommandParameter="Inicio" />
+            </VerticalStackLayout.GestureRecognizers>
+
+            <Image Source="hogar.png"
+                   WidthRequest="24"
+                   HeightRequest="24"
+                   Aspect="AspectFit" />
+
+            <Label Text="Inicio"
+                   FontFamily="InterMedium"
+                   FontSize="10.5"
+                   HorizontalTextAlignment="Center"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout x:Name="GeneradorButton"
+                             Grid.Column="1"
+                             Spacing="2"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center">
+
+            <VerticalStackLayout.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnTabClicked"
+                                      CommandParameter="Generador" />
+            </VerticalStackLayout.GestureRecognizers>
+
+            <Image Source="llave.png"
+                   WidthRequest="24"
+                   HeightRequest="24"
+                   Aspect="AspectFit" />
+
+            <Label Text="Generador"
+                   FontFamily="InterMedium"
+                   FontSize="10.5"
+                   HorizontalTextAlignment="Center"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout x:Name="CategoriasButton"
+                             Grid.Column="2"
+                             Spacing="2"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center">
+
+            <VerticalStackLayout.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnTabClicked"
+                                      CommandParameter="Categorías" />
+            </VerticalStackLayout.GestureRecognizers>
+
+            <Image Source="categoria.png"
+                   WidthRequest="24"
+                   HeightRequest="24"
+                   Aspect="AspectFit" />
+
+            <Label Text="Categorías"
+                   FontFamily="InterMedium"
+                   FontSize="10.5"
+                   HorizontalTextAlignment="Center"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout x:Name="AjustesButton"
+                             Grid.Column="3"
+                             Spacing="2"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center">
+
+            <VerticalStackLayout.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnTabClicked"
+                                      CommandParameter="Ajustes" />
+            </VerticalStackLayout.GestureRecognizers>
+
+            <Image Source="configuracion.png"
+                   WidthRequest="24"
+                   HeightRequest="24"
+                   Aspect="AspectFit" />
+
+            <Label Text="Ajustes"
+                   FontFamily="InterMedium"
+                   FontSize="10.5"
+                   HorizontalTextAlignment="Center"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
     </Grid>
 </ContentView>
