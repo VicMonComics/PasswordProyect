@@ -5,34 +5,28 @@
              x:Class="PasswordSave.Common.CarruselPublicidad">
 
     <!--
-        A diferencia de tu CarruselPublicidad original (que descarga
-        imágenes PNG de un servidor propio), este no tiene imágenes reales
-        que mostrar todavía — son diapositivas de texto con el mismo
-        sistema de diseño de la app, invitando a Premium. Si más adelante
-        quieres imágenes de verdad, se cambia el DataTemplate de abajo sin
-        tocar la lógica de rotación.
+        Mezcla de las dos versiones: intenta descargar 5 imágenes
+        promocionales reales de un servidor propio; si no hay internet (o
+        la descarga falla), cae a 3 imágenes locales empacadas en el
+        proyecto (Resources/Images/bn1.png, bn2.png, bn3.png) — esas ya
+        viven en el proyecto, nunca se descargan. Sin gesto de toque, a
+        propósito (decisión ya tomada).
     -->
     <Grid RowDefinitions="Auto,10">
-        <Border Grid.Row="0" HeightRequest="50" Padding="10,0" BackgroundColor="{StaticResource GoldDim}" Stroke="{StaticResource GoldSoft}">
-            <Border.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnTapped" />
-            </Border.GestureRecognizers>
+        <Border Grid.Row="0" HeightRequest="50" Padding="0"
+                BackgroundColor="{StaticResource BgElevated}" Stroke="{StaticResource BorderSoft}"
+                StrokeShape="RoundRectangle 10">
             <CarouselView x:Name="Carousel" Loop="True" IndicatorView="Indicadores" HeightRequest="50">
                 <CarouselView.ItemTemplate>
-                    <DataTemplate x:DataType="common:PublicidadSlideItem">
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" VerticalOptions="Center">
-                            <Label Grid.Column="0" Text="🛡" TextColor="{StaticResource Gold}" FontSize="16" VerticalOptions="Center" />
-                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0">
-                                <Label Text="{Binding Title}" FontFamily="InterSemibold" FontSize="12" TextColor="{StaticResource TextPrimary}" />
-                                <Label Text="{Binding Subtitle}" FontSize="10.5" TextColor="{StaticResource TextSecondary}" />
-                            </VerticalStackLayout>
-                        </Grid>
+                    <DataTemplate x:DataType="common:PublicidadItem">
+                        <Image Source="{Binding Imagen}" Aspect="AspectFit"
+                               HorizontalOptions="Fill" VerticalOptions="Fill" />
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
             </CarouselView>
         </Border>
 
         <IndicatorView x:Name="Indicadores" Grid.Row="1" HorizontalOptions="Center"
-                       IndicatorColor="{StaticResource Border}" SelectedIndicatorColor="{StaticResource Gold}" />
+                       IndicatorColor="{StaticResource Border}" SelectedIndicatorColor="{StaticResource Jade}" />
     </Grid>
 </ContentView>

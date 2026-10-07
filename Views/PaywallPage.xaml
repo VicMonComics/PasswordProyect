@@ -44,17 +44,17 @@
                 <Label Grid.Row="2" Grid.Column="1" Text="—" Style="{StaticResource CellLabel}" />
                 <Label Grid.Row="2" Grid.Column="2" Text="Ilimitadas" Style="{StaticResource CellLabel}" TextColor="{StaticResource Gold}" />
 
-                <Label Grid.Row="3" Grid.Column="0" Text="Alertas de filtraciones" Style="{StaticResource CellLabel}" HorizontalTextAlignment="Start" Padding="12,9" TextColor="{StaticResource TextPrimary}" />
+                <!--<Label Grid.Row="3" Grid.Column="0" Text="Alertas de filtraciones" Style="{StaticResource CellLabel}" HorizontalTextAlignment="Start" Padding="12,9" TextColor="{StaticResource TextPrimary}" />
                 <Label Grid.Row="3" Grid.Column="1" Text="—" Style="{StaticResource CellLabel}" />
-                <Label Grid.Row="3" Grid.Column="2" Text="✓" Style="{StaticResource CellLabel}" TextColor="{StaticResource Jade}" />
+                <Label Grid.Row="3" Grid.Column="2" Text="✓" Style="{StaticResource CellLabel}" TextColor="{StaticResource Jade}" />-->
 
                 <Label Grid.Row="4" Grid.Column="0" Text="Copia de seguridad" Style="{StaticResource CellLabel}" HorizontalTextAlignment="Start" Padding="12,9" TextColor="{StaticResource TextPrimary}" />
                 <Label Grid.Row="4" Grid.Column="1" Text="—" Style="{StaticResource CellLabel}" />
                 <Label Grid.Row="4" Grid.Column="2" Text="✓" Style="{StaticResource CellLabel}" TextColor="{StaticResource Jade}" />
 
-                <Label Grid.Row="5" Grid.Column="0" Text="Soporte prioritario" Style="{StaticResource CellLabel}" HorizontalTextAlignment="Start" Padding="12,9" TextColor="{StaticResource TextPrimary}" />
+                <!--<Label Grid.Row="5" Grid.Column="0" Text="Soporte prioritario" Style="{StaticResource CellLabel}" HorizontalTextAlignment="Start" Padding="12,9" TextColor="{StaticResource TextPrimary}" />
                 <Label Grid.Row="5" Grid.Column="1" Text="—" Style="{StaticResource CellLabel}" />
-                <Label Grid.Row="5" Grid.Column="2" Text="✓" Style="{StaticResource CellLabel}" TextColor="{StaticResource Jade}" />
+                <Label Grid.Row="5" Grid.Column="2" Text="✓" Style="{StaticResource CellLabel}" TextColor="{StaticResource Jade}" />-->
             </Grid>
         </Border>
 
