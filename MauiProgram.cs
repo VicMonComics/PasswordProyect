@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using PasswordSave.Services;
@@ -21,6 +22,7 @@ public static class MauiProgram
 #if ANDROID
                 .UseMauiMTAdmob()
 #endif
+             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 // Agrega los .ttf reales a Resources/Fonts/ (descárgalos de
@@ -109,7 +111,6 @@ public static class MauiProgram
         services.AddTransient<CategoriesPage>();
         services.AddTransient<SettingsViewModel>();
         services.AddTransient<SettingsPage>();
-        services.AddTransient<PaywallPage>();
         services.AddTransient<AddEditCredentialViewModel>();
         services.AddTransient<AddEditCredentialPage>();
         services.AddTransient<StoreViewModel>();

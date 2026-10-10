@@ -20,11 +20,21 @@
 
                 <!-- Encabezado -->
                 <VerticalStackLayout Spacing="6" Padding="26,0,26,0" HorizontalOptions="Center">
-                    <Border WidthRequest="58" HeightRequest="58" Padding="0" Stroke="Transparent" StrokeShape="RoundRectangle 18"
+                    <Border WidthRequest="70" HeightRequest="70" Padding="0" Stroke="Transparent" StrokeShape="RoundRectangle 18"
                             HorizontalOptions="Center" Background="{StaticResource GoldGradientBrush}">
-                        <Label Text="🛡" FontSize="24" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="{StaticResource OnGold}" />
+                        <VerticalStackLayout
+                            VerticalOptions="Center"
+                            HeightRequest="70">
+                        <Image
+                            Margin="0,8,0,0"
+                            VerticalOptions="Center"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            Source="llave.png"></Image>
+                        <!--<Label Text="🛡" FontSize="24" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="{StaticResource OnGold}" />-->
+                        </VerticalStackLayout>
                     </Border>
-                    <Label Text="PasswordSave Premium" Style="{StaticResource TitleLabel}" HorizontalTextAlignment="Center" />
+                    <Label Text="Mi Llaver Personal Premium" Style="{StaticResource TitleLabel}" HorizontalTextAlignment="Center" />
                     <Label Text="Seguridad sin límites para tu vida digital" Style="{StaticResource SubtitleLabel}" HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
 
@@ -91,10 +101,10 @@
                             <Label Grid.Column="0" Text="✓" TextColor="{StaticResource Jade}" FontFamily="InterSemibold" />
                             <Label Grid.Column="1" Text="Copia de seguridad cifrada, exportable a otro dispositivo" FontSize="12.5" TextColor="{StaticResource TextPrimary}" />
                         </Grid>
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <!--<Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
                             <Label Grid.Column="0" Text="✓" TextColor="{StaticResource Jade}" FontFamily="InterSemibold" />
                             <Label Grid.Column="1" Text="Alertas de filtraciones de datos conocidas" FontSize="12.5" TextColor="{StaticResource TextPrimary}" />
-                        </Grid>
+                        </Grid>-->
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
                             <Label Grid.Column="0" Text="✓" TextColor="{StaticResource Jade}" FontFamily="InterSemibold" />
                             <Label Grid.Column="1" Text="Bloqueo automático configurable hasta 10 minutos" FontSize="12.5" TextColor="{StaticResource TextPrimary}" />
@@ -103,10 +113,10 @@
                             <Label Grid.Column="0" Text="✓" TextColor="{StaticResource Jade}" FontFamily="InterSemibold" />
                             <Label Grid.Column="1" Text="Sin anuncios en ninguna pantalla" FontSize="12.5" TextColor="{StaticResource TextPrimary}" />
                         </Grid>
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <!--<Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
                             <Label Grid.Column="0" Text="✓" TextColor="{StaticResource Jade}" FontFamily="InterSemibold" />
                             <Label Grid.Column="1" Text="Soporte prioritario" FontSize="12.5" TextColor="{StaticResource TextPrimary}" />
-                        </Grid>
+                        </Grid>-->
                     </VerticalStackLayout>
                 </Border>
 
@@ -127,7 +137,7 @@
                 <VerticalStackLayout Padding="22,0" Spacing="10" IsVisible="{Binding IsPremium, Converter={StaticResource InverseBoolConverter}}">
                     <Button Text="Continuar con Premium" Style="{StaticResource GoldButton}" Command="{Binding PurchaseCommand}" />
                     <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
-                    <Button Text="Restaurar compras" Style="{StaticResource TextButton}" Command="{Binding RestoreCommand}" />
+                    <Button Text="Restaurar compras" HeightRequest="50" BorderColor="White" Style="{StaticResource TextButton}" Command="{Binding RestoreCommand}" />
                 </VerticalStackLayout>
 
             </VerticalStackLayout>

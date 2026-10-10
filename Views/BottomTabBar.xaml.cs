@@ -1,3 +1,5 @@
+using CommunityToolkit.Maui.Behaviors;
+
 namespace PasswordSave.Common;
 
 public partial class BottomTabBar : ContentView
@@ -40,28 +42,30 @@ public partial class BottomTabBar : ContentView
     private void UpdateHighlight()
     {
         var activeColor = (Color)Application.Current!.Resources["Jade"];
-        var inactiveColor = (Color)Application.Current!.Resources["TextTertiary"];
+        var inactiveColor = Colors.White;
 
-        SetTabColor(InicioButton, "Inicio", activeColor, inactiveColor);
-        SetTabColor(GeneradorButton, "Generador", activeColor, inactiveColor);
-        SetTabColor(CategoriasButton, "Categorías", activeColor, inactiveColor);
-        SetTabColor(AjustesButton, "Ajustes", activeColor, inactiveColor);
+        SetTabColor(InicioButton, InicioImage, "Inicio", activeColor, inactiveColor);
+        SetTabColor(GeneradorButton, GeneradorImage, "Generador", activeColor, inactiveColor);
+        SetTabColor(CategoriasButton, CategoriasImage, "Categorías", activeColor, inactiveColor);
+        SetTabColor(AjustesButton, AjustesImage, "Ajustes", activeColor, inactiveColor);
     }
 
     private static void SetTabColor(
         VerticalStackLayout tab,
+        Image image,
         string tabName,
         Color activeColor,
         Color inactiveColor)
     {
         var label = tab.Children.OfType<Label>().FirstOrDefault();
-        var image = tab.Children.OfType<Image>().FirstOrDefault();
-        var isActive = tabName == ((BottomTabBar)tab.Parent.Parent).ActiveTab;
+        var isActive = tabName == ((BottomTabBar)tab.Parent!.Parent!).ActiveTab;
 
         if (label != null)
             label.TextColor = isActive ? activeColor : inactiveColor;
 
-        if (image != null)
-            image.Opacity = isActive ? 1.0 : 0.6;
+        var behavior = image.Behaviors.OfType<IconTintColorBehavior>().FirstOrDefault();
+
+        if (behavior != null)
+            behavior.TintColor = isActive ? activeColor : inactiveColor;
     }
 }

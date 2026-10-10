@@ -1,12 +1,14 @@
+using Microsoft.Maui.ApplicationModel.DataTransfer;
+using Mopups.Services;
+using PasswordSave.Common;
+using PasswordSave.Models;
+using PasswordSave.Services.Abstractions;
+using PasswordSave.Views.Custom;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Microsoft.Maui.ApplicationModel.DataTransfer;
-using PasswordSave.Common;
-using PasswordSave.Models;
-using PasswordSave.Services.Abstractions;
 
 namespace PasswordSave.ViewModels;
 
@@ -292,6 +294,11 @@ public sealed class AddEditCredentialViewModel : ObservableObject
             ErrorMessage = "La contraseña no puede estar vacía.";
             return;
         }
+        if (string.IsNullOrEmpty(Category))
+        {
+            ErrorMessage = "La categoría no puede estar vacía.";
+            return;
+        }
 
         if (!IsEditMode && !_isPremium)
         {
@@ -333,18 +340,28 @@ public sealed class AddEditCredentialViewModel : ObservableObject
 
     private async Task DeleteAsync()
     {
-        if (_id is null)
-            return;
+        var popQR = new YesOrNot();
+        DisplayAlertCustomViewModel.Instance.MessageType = PasswordSave.ViewModels.DisplayAlertCustomViewModel.messageType.Informacion;
+        DisplayAlertCustomViewModel.Instance.Title = "";
+        DisplayAlertCustomViewModel.Instance.Mensaje = "¿Confirmas la eliminación de esta contraseña / password ?";
 
-        IsBusy = true;
-        try
+        await MopupService.Instance.PushAsync(popQR);
+        var valor = await popQR.PopupDismissedTask;
+        if (valor == "SI")
         {
-            await _credentialRepository.DeleteAsync(_id);
-            Closed?.Invoke(this, EventArgs.Empty);
-        }
-        finally
-        {
-            IsBusy = false;
+            if (_id is null)
+                return;
+
+            IsBusy = true;
+            try
+            {
+                await _credentialRepository.DeleteAsync(_id);
+                Closed?.Invoke(this, EventArgs.Empty);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 

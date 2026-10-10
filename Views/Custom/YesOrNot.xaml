@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mopups:PopupPage
+        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        xmlns:mopups="clr-namespace:Mopups.Pages;assembly=Mopups"
+        xmlns:mopupsanim="clr-namespace:Mopups.Animations;assembly=Mopups" 
+        xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+        x:Class="PasswordSave.Views.Custom.YesOrNot">
+    <mopups:PopupPage.Animation>
+        <mopupsanim:ScaleAnimation
+        DurationIn="200"
+        EasingIn="SinOut"
+        PositionIn="Bottom"
+        EasingOut="SinIn"
+        PositionOut="Center"
+        ScaleIn="1"
+        ScaleOut="1" />
+    </mopups:PopupPage.Animation>
+
+    <AbsoluteLayout
+   
+        HorizontalOptions="Center"
+        VerticalOptions="Center">
+        <Border
+            Margin="4,0"
+            WidthRequest="350"
+            HeightRequest="450"
+            Stroke="LightGray"
+            StrokeThickness="1"
+            BackgroundColor="#062018"
+            AbsoluteLayout.LayoutFlags="All"
+            AbsoluteLayout.LayoutBounds="0,1,1,1">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10,10,10,10"/>
+            </Border.StrokeShape>
+            <VerticalStackLayout
+                Margin="8,0,8,0"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Spacing="3">
+                <Label
+                    Text="{Binding Title}"
+                    TextColor="{AppThemeBinding Dark=White, Light=White}"
+                    FontSize="Large"
+                    FontAttributes="Bold"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontFamily="MonB"
+                />
+                <Label
+                    Text="{Binding Mensaje}"
+                    TextColor="{AppThemeBinding Dark=White, Light=White}"
+                    FontSize="Medium"
+                    Margin="16,0,16,0"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontFamily="MontT"
+                />
+
+                <Button
+                    x:Name="YesBtn"
+                    Margin="8,16"
+                    HeightRequest="50"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="End"
+                    BackgroundColor="#22C58B"
+                    FontFamily="MonB"
+                    CornerRadius="8"
+                    TextColor="{AppThemeBinding Dark='Black', Light='Black'}"
+                    Text="SI"
+                    Clicked="YesBtn_Clicked">
+                </Button>
+                <Button
+                    x:Name="NoBtn"
+                    Margin="8,16"
+                    HeightRequest="50"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="End"
+                    BackgroundColor="LightGray"
+                    FontFamily="MonB"
+                    CornerRadius="8"
+                    TextColor="{AppThemeBinding Dark='Black', Light='Black'}"
+                    Text="NO"
+                    Clicked="NoBtn_Clicked">
+                </Button>
+            </VerticalStackLayout>
+            <Border.Shadow>
+                <Shadow
+                    Brush="Black"
+                    Offset="0,0"
+                    Radius="0.2"
+                    Opacity="0.8"/>
+            </Border.Shadow>
+        </Border>
+        <Image
+            Source="{Binding Ico}"
+            IsAnimationPlaying="{Binding AnimationPlaying}"
+            VerticalOptions="Center"
+            HorizontalOptions="Center"
+            HeightRequest="65"
+            WidthRequest="65"
+            Aspect="AspectFill"
+            AbsoluteLayout.LayoutBounds="0,0,1,0.60"
+            AbsoluteLayout.LayoutFlags="All">
+            <Image.Behaviors>
+                <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light='#22C58B', Dark='#22C58B'}" />
+            </Image.Behaviors>
+            </Image>
+    </AbsoluteLayout>
+    </mopups:PopupPage>

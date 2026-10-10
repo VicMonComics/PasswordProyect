@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="PasswordSave.Common.BottomTabBar">
 
     <Grid RowDefinitions="Auto"
@@ -25,10 +26,17 @@
                                       CommandParameter="Inicio" />
             </VerticalStackLayout.GestureRecognizers>
 
-            <Image Source="hogar.png"
+            <Image x:Name="InicioImage"
+                   Source="hogar.png"
                    WidthRequest="24"
                    HeightRequest="24"
-                   Aspect="AspectFit" />
+                   Aspect="AspectFit">
+
+                <Image.Behaviors>
+                    <toolkit:IconTintColorBehavior />
+                </Image.Behaviors>
+
+            </Image>
 
             <Label Text="Inicio"
                    FontFamily="InterMedium"
@@ -48,10 +56,17 @@
                                       CommandParameter="Generador" />
             </VerticalStackLayout.GestureRecognizers>
 
-            <Image Source="llave.png"
+            <Image x:Name="GeneradorImage"
+                   Source="llave.png"
                    WidthRequest="24"
                    HeightRequest="24"
-                   Aspect="AspectFit" />
+                   Aspect="AspectFit">
+
+                <Image.Behaviors>
+                    <toolkit:IconTintColorBehavior />
+                </Image.Behaviors>
+
+            </Image>
 
             <Label Text="Generador"
                    FontFamily="InterMedium"
@@ -71,10 +86,17 @@
                                       CommandParameter="Categorías" />
             </VerticalStackLayout.GestureRecognizers>
 
-            <Image Source="categoria.png"
+            <Image x:Name="CategoriasImage"
+                   Source="categoria.png"
                    WidthRequest="24"
                    HeightRequest="24"
-                   Aspect="AspectFit" />
+                   Aspect="AspectFit">
+
+                <Image.Behaviors>
+                    <toolkit:IconTintColorBehavior />
+                </Image.Behaviors>
+
+            </Image>
 
             <Label Text="Categorías"
                    FontFamily="InterMedium"
@@ -94,10 +116,17 @@
                                       CommandParameter="Ajustes" />
             </VerticalStackLayout.GestureRecognizers>
 
-            <Image Source="configuracion.png"
+            <Image x:Name="AjustesImage"
+                   Source="configuracion.png"
                    WidthRequest="24"
                    HeightRequest="24"
-                   Aspect="AspectFit" />
+                   Aspect="AspectFit">
+
+                <Image.Behaviors>
+                    <toolkit:IconTintColorBehavior />
+                </Image.Behaviors>
+
+            </Image>
 
             <Label Text="Ajustes"
                    FontFamily="InterMedium"
